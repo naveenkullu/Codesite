@@ -31,60 +31,77 @@ export default function HomePage() {
   };
 
   const fetchPosts = async () => {
-    if (!supabase) return;
-    const { data, error } = await supabase
-      .from("posts")
-      .select("id, question, code, createdAt")
-      .order("createdAt", { ascending: false })
-      .limit(8);
+  if (!supabase) return;
 
-    if (!error && data) setPosts(data);
-  };
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, question, code, created_at")
+    .order("created_at", { ascending: false })
+    .limit(8);
+
+  console.log(data, error);
+
+  if (!error && data) {
+    setPosts(data);
+  }
+};
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  const handleCopy = async (value = code) => {
-    if (!value.trim()) return showToast("Please add code first", "error");
-    try {
-      await navigator.clipboard.writeText(value);
-      showToast("Code copied successfully!");
-    } catch {
-      showToast("Copy failed. Please copy manually.", "error");
-    }
-  };
-
   const handlePost = async () => {
-    if (!supabase) {
-      return showToast(
-        "Missing env: set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY), then redeploy.",
-        "error"
-      );
-    }
-    if (!question.trim() || !code.trim()) {
-      return showToast("Question and code are required", "error");
-    }
+  if (!supabase) {
+    return showToast(
+      "Supabase env missing",
+      "error"
+    );
+  }
 
+  if (!question.trim() || !code.trim()) {
+    return showToast("Question and code are required", "error");
+  }
+
+  try {
     setPosting(true);
-    const id = uid();
-    const payload = {
-      id,
-      question: question.trim(),
-      code,
-      createdAt: new Date().toISOString(),
-    };
 
-    const { error } = await supabase.from("posts").insert(payload);
+    const { data, error } = await supabase
+      .from("posts")
+      .insert([
+        {
+          question: question.trim(),
+          code: code.trim(),
+        },
+      ])
+      .select();
+
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+
     setPosting(false);
 
-    if (error) return showToast("Post failed. Check table/policies.", "error");
+    if (error) {
+      return showToast(error.message, "error");
+    }
+
+    const postId = data?.[0]?.id;
 
     setQuestion("");
     setCode("");
+
     await fetchPosts();
-    showToast(`Posted! Share: /post/${id}`);
-  };
+
+    showToast(`Posted successfully!`);
+
+    if (postId) {
+      window.location.href = `/post/${postId}`;
+    }
+  } catch (err) {
+    console.log(err);
+    setPosting(false);
+    showToast("Something went wrong", "error");
+  }
+};
 
   return (
     <main className="page-wrap">
@@ -143,7 +160,7 @@ export default function HomePage() {
                 <h4>{post.question}</h4>
                 <p>{post.code.slice(0, 120)}{post.code.length > 120 ? "..." : ""}</p>
                 <span>
-                  {new Date(post.createdAt).toLocaleString()}
+                  {new Date(post.created_at).toLocaleString()}
                 </span>
               </Link>
             ))
