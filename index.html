@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodePad Dark</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>CodePad Dark</h1>
+      <p>Ask, paste, copy — fast.</p>
+    </header>
+
+    <main class="app-shell">
+      <section class="panel" aria-label="Code input panel">
+        <label for="question" class="label">Your Question</label>
+        <input
+          id="question"
+          class="input"
+          type="text"
+          placeholder="e.g. How do I optimize this loop?"
+        />
+
+        <div class="editor-header">
+          <label for="codeInput" class="label">Code Editor</label>
+          <button id="copyBtn" class="copy-btn" type="button">Copy Code</button>
+        </div>
+
+        <textarea
+          id="codeInput"
+          class="code-editor"
+          placeholder="Paste or write your code here..."
+          spellcheck="false"
+        ></textarea>
+
+        <p id="copyMessage" class="copy-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" aria-label="Code preview panel">
+        <h2 class="preview-title">Styled Code Preview</h2>
+        <pre class="code-preview"><code id="previewCode">// Your code will appear here...</code></pre>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
