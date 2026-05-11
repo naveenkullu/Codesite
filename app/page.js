@@ -15,7 +15,9 @@ export default function HomePage() {
   const [question, setQuestion] = useState("");
   const [code, setCode] = useState("");
   const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [posting, setPosting] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [toast, setToast] = useState({ show: false, text: "", type: "ok" });
 
   const preview = useMemo(
@@ -36,13 +38,13 @@ export default function HomePage() {
   const { data, error } = await supabase
     .from("posts")
     .select("id, question, code, created_at")
-    .order("created_at", { ascending: false })
-    .limit(8);
+    .order("created_at", { ascending: false });
 
   console.log(data, error);
 
   if (!error && data) {
-    setPosts(data);
+    setAllPosts(data);
+    setPosts(data.slice(0, 8));
   }
 };
 
@@ -150,7 +152,21 @@ export default function HomePage() {
       </section>
 
       <section className="recent-wrap">
-        <h3>Recent Posts</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <h3>Recent Posts</h3>
+          {allPosts.length > 8 && (
+            <button 
+              className="copy-btn" 
+              onClick={() => {
+                setShowAll(!showAll);
+                setPosts(showAll ? allPosts.slice(0, 8) : allPosts);
+              }}
+              style={{ padding: "6px 12px", fontSize: "14px" }}
+            >
+              {showAll ? `Show Less (${allPosts.length})` : `Show All (${allPosts.length})`}
+            </button>
+          )}
+        </div>
         <div className="cards">
           {posts.length === 0 ? (
             <p className="muted">No posts yet.</p>
