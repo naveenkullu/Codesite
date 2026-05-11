@@ -154,18 +154,16 @@ export default function HomePage() {
       <section className="recent-wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
           <h3>Recent Posts</h3>
-          {allPosts.length > 8 && (
-            <button 
-              className="copy-btn" 
-              onClick={() => {
-                setShowAll(!showAll);
-                setPosts(showAll ? allPosts.slice(0, 8) : allPosts);
-              }}
-              style={{ padding: "6px 12px", fontSize: "14px" }}
-            >
-              {showAll ? `Show Less (${allPosts.length})` : `Show All (${allPosts.length})`}
-            </button>
-          )}
+          <button 
+            className="copy-btn" 
+            onClick={() => {
+              setShowAll(!showAll);
+              setPosts(showAll ? allPosts.slice(0, 8) : allPosts);
+            }}
+            style={{ padding: "6px 12px", fontSize: "14px" }}
+          >
+            {showAll ? `Show Less (${allPosts.length})` : `Show All (${allPosts.length})`}
+          </button>
         </div>
         <div className="cards">
           {posts.length === 0 ? (
