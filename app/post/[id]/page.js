@@ -11,27 +11,54 @@ export default function PostPage({ params }) {
 
   useEffect(() => {
     const load = async () => {
-      if (!supabase) return setLoading(false);
-      const { data } = await supabase
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
         .from("posts")
-        .select("id, question, code, createdAt")
+        .select("id, question, code, created_at")
         .eq("id", params.id)
         .single();
+
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
+
       setPost(data || null);
       setLoading(false);
     };
+
     load();
   }, [params.id]);
 
   const copy = async () => {
     if (!post?.code) return;
+
     await navigator.clipboard.writeText(post.code);
+
     setToast("Code copied successfully!");
-    setTimeout(() => setToast(""), 1800);
+
+    setTimeout(() => {
+      setToast("");
+    }, 1800);
   };
 
-  if (loading) return <main className="page-wrap"><p className="muted">Loading post...</p></main>;
-  if (!post) return <main className="page-wrap"><p className="muted">Post not found.</p></main>;
+  if (loading) {
+    return (
+      <main className="page-wrap">
+        <p className="muted">Loading post...</p>
+      </main>
+    );
+  }
+
+  if (!post) {
+    return (
+      <main className="page-wrap">
+        <p className="muted">Post not found.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="page-wrap">
@@ -43,12 +70,24 @@ export default function PostPage({ params }) {
       <section className="panel single-post">
         <div className="row-between">
           <h2>{post.question}</h2>
-          <button className="copy-btn" onClick={copy}>Copy Code</button>
+
+          <button className="copy-btn" onClick={copy}>
+            Copy Code
+          </button>
         </div>
-        <pre className="code-preview"><code>{post.code}</code></pre>
+
+        <pre className="code-preview">
+          <code>{post.code}</code>
+        </pre>
+
         <div className="row-between mt-12">
-          <span className="muted">{new Date(post.createdAt).toLocaleString()}</span>
-          <Link href="/" className="back-link">← Back to Home</Link>
+          <span className="muted">
+            {new Date(post.created_at).toLocaleString()}
+          </span>
+
+          <Link href="/" className="back-link">
+            ← Back to Home
+          </Link>
         </div>
       </section>
 

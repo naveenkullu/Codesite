@@ -56,7 +56,12 @@ export default function HomePage() {
   };
 
   const handlePost = async () => {
-    if (!supabase) return showToast("Supabase env is missing", "error");
+    if (!supabase) {
+      return showToast(
+        "Missing env: set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY), then redeploy.",
+        "error"
+      );
+    }
     if (!question.trim() || !code.trim()) {
       return showToast("Question and code are required", "error");
     }
