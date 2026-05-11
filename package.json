@@ -1,0 +1,30 @@
+{
+  "name": "cpppp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modern code sharing app with Supabase",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naveenkullu/Codesite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naveenkullu/Codesite/issues"
+  },
+  "homepage": "https://github.com/naveenkullu/Codesite#readme"
+  ,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.4",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
